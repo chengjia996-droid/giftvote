@@ -18,6 +18,9 @@ button{padding:12px 10px;border:0;border-radius:10px;font-size:16px;font-weight:
 .muted{font-size:12px;color:#8b90a0;line-height:1.5}
 iframe{width:100%;aspect-ratio:9/16;border:0;border-radius:14px;background:#3a3f4a}
 #log{font:12px monospace;color:#8b90a0;max-height:90px;overflow:auto;margin-top:8px}
+#manual{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#manual.n2,#manual.n4{grid-template-columns:repeat(2,1fr)}
+input[type=color]{height:38px;padding:4px;cursor:pointer}
 </style></head><body>
 <div class="wrap">
 <div>
@@ -27,20 +30,19 @@ iframe{width:100%;aspect-ratio:9/16;border:0;border-radius:14px;background:#3a3f
  <div class="card">
   <div class="row"><button class="go big" onclick="send({cmd:'start',t:+v('t')})">▶ 开始</button><button class="en big" onclick="send({cmd:'end'})">■ 结束</button><button class="rs big" onclick="send({cmd:'reset'})">↺ 清零</button></div>
   <h2>手动加票（备用）</h2>
-  <div class="row" id="manual"></div>
+  <div id="manual"></div>
   <div id="log"></div>
  </div>
 
  <div class="card">
   <h2 style="margin-top:0">设置</h2>
   <label>标题</label><input id="title" value="WHO WIN?">
-  <div class="row2"><div><label>每轮秒数</label><input id="t" type="number" value="20" min="5"></div>
-  <div><label>计票方式</label><select id="mode"><option value="count">每个礼物 = 1 票</option><option value="coins">按金币数算票</option></select></div></div>
   <div class="row">
-   <div><label>A 名字</label><input id="n1" value="A"><label>A 礼物</label><select id="g1"></select></div>
-   <div><label>B 名字</label><input id="n2" value="B"><label>B 礼物</label><select id="g2"></select></div>
-   <div><label>C 名字</label><input id="n3" value="C"><label>C 礼物</label><select id="g3"></select></div>
+   <div><label>每轮秒数</label><input id="t" type="number" value="20" min="5"></div>
+   <div><label>计票方式</label><select id="mode"><option value="count">每个礼物 = 1 票</option><option value="coins">按金币数算票</option></select></div>
+   <div><label>选项数量</label><select id="opts"><option value="2">2 个</option><option value="3" selected>3 个</option><option value="4">4 个</option><option value="5">5 个</option><option value="6">6 个</option></select></div>
   </div>
+  <div class="row" id="optFields"></div>
   <div class="row2"><div><label>位置</label><select id="pos"><option value="top">上方</option><option value="center">中间</option><option value="bottom">下方</option></select></div>
   <div><label>背景深浅 (0–1)</label><input id="bg" value="0.78"></div></div>
   <h2>礼物数据来源</h2>
@@ -64,22 +66,36 @@ iframe{width:100%;aspect-ratio:9/16;border:0;border-radius:14px;background:#3a3f
 const $=id=>document.getElementById(id),v=id=>$(id).value.trim();
 const Q=new URLSearchParams(location.search);
 const base=location.href.replace(/[?#].*$/,'').replace(/control\.html$/,'');
-const F=['title','t','mode','n1','n2','n3','g1','g2','g3','pos','bg','src','user','key','room'];
-['g1','g2','g3'].forEach((g,i)=>{$(g).innerHTML=GIFTS.map(x=>`<option>${x.name}</option>`).join('');$(g).value=["GG","Rose","It's corn"][i]});
+const LETTERS='ABCDEF';
+const DEF_COLORS=['#22d3c5','#ff4d8d','#b6f03c','#ff9f1c','#7c5cff','#3b9eff'];
+const DEF_GIFTS=["GG","Rose","It's corn","TikTok","Heart Me","Ice Cream Cone"];
+const BASE=['title','t','mode','opts','pos','bg','src','user','key','room'];
+function allKeys(){const k=BASE.slice();for(let i=1;i<=6;i++)k.push('n'+i,'g'+i,'c'+i);return k}
+function nOpts(){return Math.min(6,Math.max(2,parseInt(v('opts')||'3')||3))}
+function hex(c){c=(c||'').trim();if(!c)return '';if(c[0]!=='#')c='#'+c;return /^#[0-9a-fA-F]{6}$/.test(c)?c.toLowerCase():''}
+$('optFields').innerHTML=LETTERS.split('').map((L,i)=>`<div class="optf" data-i="${i}"><label>${L} 名字</label><input id="n${i+1}" value="${L}"><label>${L} 礼物</label><select id="g${i+1}"></select><label>${L} 颜色</label><input id="c${i+1}" type="color" value="${DEF_COLORS[i]}"></div>`).join('');
+for(let i=0;i<6;i++){$('g'+(i+1)).innerHTML=GIFTS.map(x=>`<option>${x.name}</option>`).join('');$('g'+(i+1)).value=DEF_GIFTS[i]}
 let saved={};try{saved=JSON.parse(localStorage.giftvoteCfg||'{}')}catch(_){}
-F.forEach(k=>{const val=Q.get(k)??saved[k];if(val!=null&&val!=='')$(k).value=val});
+allKeys().forEach(k=>{const el=$(k);if(!el)return;const val=Q.get(k)??saved[k];if(val==null||val==='')return;if(k[0]==='c'){const h=hex(val);if(h)el.value=h}else el.value=val});
 if(!v('room'))$('room').value=Math.random().toString(36).slice(2,10);
-function params(extra){const p=new URLSearchParams();F.forEach(k=>{const x=v(k);if(x==='')return;if(k==='key'&&v('src')!=='euler')return;p.set(k,x)});if(v('src')==='none')p.set('src','none');for(const k in extra)p.set(k,extra[k]);return p}
+function showOpts(){const n=nOpts();document.querySelectorAll('.optf').forEach((el,i)=>el.style.display=i<n?'':'none')}
+function params(extra){const p=new URLSearchParams();const n=nOpts();if(n!==3)p.set('opts',String(n));
+ BASE.forEach(k=>{if(k==='opts')return;const x=v(k);if(x==='')return;if(k==='key'&&v('src')!=='euler')return;p.set(k,x)});
+ for(let i=1;i<=n;i++){const nv=v('n'+i),gv=v('g'+i),cv=hex(v('c'+i));if(nv)p.set('n'+i,nv);if(gv)p.set('g'+i,gv);if(cv&&cv!==DEF_COLORS[i-1])p.set('c'+i,cv)}
+ if(v('src')==='none')p.set('src','none');for(const k in extra)p.set(k,extra[k]);return p}
 let pvT;
-function upd(){const s={};F.forEach(k=>s[k]=v(k));localStorage.giftvoteCfg=JSON.stringify(s);
+function upd(){const s={};allKeys().forEach(k=>{if($(k))s[k]=v(k)});localStorage.giftvoteCfg=JSON.stringify(s);
  $('ourl').value=base+'index.html?'+params({});
  const d=params({demo:1});d.delete('key');d.set('src','none');$('durl').value=base+'index.html?'+d;
- const c=new URLSearchParams();F.forEach(k=>{if(v(k)&&!(k==='key'&&v('src')!=='euler'))c.set(k,v(k))});$('curl').value=base+'control.html?'+c;
+ const c=params({});$('curl').value=base+'control.html?'+c;
  clearTimeout(pvT);pvT=setTimeout(()=>{const pu='index.html?'+params({debug:1,preview:1});if($('pv').getAttribute('src')!==pu)$('pv').setAttribute('src',pu)},600);
- $('manual').innerHTML=[1,2,3].map(i=>`<div class="opt"><b>${'ABC'[i-1]} · ${esc(v('n'+i))}</b><button style="background:${['#22d3c5','#ff4d8d','#b6f03c'][i-1]}" onclick="send({cmd:'add',i:${i-1},n:1})">+1</button><button style="background:#2a2e3a;color:#fff" onclick="send({cmd:'add',i:${i-1},n:5})">+5</button><button style="background:#2a2e3a;color:#fff" onclick="send({cmd:'add',i:${i-1},n:-1})">−1</button></div>`).join('');
+ const n=nOpts();$('manual').className='n'+n;
+ $('manual').innerHTML=Array.from({length:n},(_,i)=>`<div class="opt"><b>${LETTERS[i]} · ${esc(v('n'+(i+1)))}</b><button style="background:${hex(v('c'+(i+1)))||DEF_COLORS[i]}" onclick="send({cmd:'add',i:${i},n:1})">+1</button><button style="background:#2a2e3a;color:#fff" onclick="send({cmd:'add',i:${i},n:5})">+5</button><button style="background:#2a2e3a;color:#fff" onclick="send({cmd:'add',i:${i},n:-1})">−1</button></div>`).join('');
 }
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-F.forEach(k=>$(k).addEventListener('input',upd));upd();
+showOpts();
+allKeys().forEach(k=>{const el=$(k);if(!el)return;el.addEventListener('input',()=>{if(k==='opts')showOpts();upd()});if(el.tagName==='SELECT'||el.type==='color')el.addEventListener('change',()=>{if(k==='opts')showOpts();upd()})});
+upd();
 function topic(){return 'giftvote_'+v('room').replace(/[^A-Za-z0-9_-]/g,'')}
 async function send(c){
  c.k=Math.random().toString(36).slice(2,12);

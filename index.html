@@ -39,14 +39,42 @@ hr{border:0;height:calc(.2*var(--u));background:rgba(255,255,255,.13);margin:cal
 @keyframes pop{to{transform:translate(-50%,calc(-9*var(--u)));opacity:0}}
 .card .crown{display:none;position:absolute;top:calc(-3.2*var(--u));left:50%;transform:translateX(-50%);font-size:calc(2.6*var(--u));font-weight:900;letter-spacing:.14em;padding:calc(.8*var(--u)) calc(2*var(--u));border-radius:calc(5*var(--u));color:#111;white-space:nowrap}
 .ended .card.win{transform:scale(1.05);border-color:var(--cc);box-shadow:0 0 calc(4*var(--u)) var(--cc),inset 0 0 calc(3*var(--u)) color-mix(in srgb,var(--cc) 25%,transparent)}
-.ended .card.win .crown{display:block;background:var(--cc)}
 .ended .card.lose{opacity:.42}
+.ended .card.win .crown{display:block;background:var(--cc)}
 #cta{margin-top:calc(4*var(--u));text-align:center;font-size:calc(3*var(--u));font-weight:800;letter-spacing:.24em;color:#aeb2bd}
-#bar{margin-top:calc(2.6*var(--u));height:calc(2.4*var(--u));border-radius:calc(2*var(--u));overflow:hidden;display:flex;background:rgba(255,255,255,.08)}
+#bar{margin-top:calc(2.6*var(--u));height:calc(2.4*var(--u));overflow:hidden;display:flex;background:rgba(255,255,255,.08);border-radius:calc(2*var(--u))}
 #bar div{height:100%;transition:flex-grow .6s ease;min-width:0}
 #bar div+div{margin-left:calc(.4*var(--u))}
 #st{position:fixed;right:6px;bottom:6px;font:12px/1.3 monospace;background:rgba(0,0,0,.7);padding:4px 7px;border-radius:6px;color:#ccc;max-width:70vw}
 #st.ok{color:#5f5}#st.bad{color:#f88}
+/* 2 options: two wider cards, same typography as the 3-option layout */
+#box.n2 #cards{grid-template-columns:repeat(2,1fr);max-width:78%;margin:0 auto}
+/* 4–6 options: tighter type and icons so 2 card rows fit a 9:16 frame */
+#box.n4,#box.n5,#box.n6{padding:calc(3.6*var(--u)) calc(3.4*var(--u)) calc(3.2*var(--u))}
+#box.n4 h1,#box.n5 h1,#box.n6 h1{font-size:calc(7.6*var(--u))}
+#box.n4 #sub,#box.n5 #sub,#box.n6 #sub{margin-top:calc(1.5*var(--u));font-size:calc(3.2*var(--u));gap:calc(1.2*var(--u))}
+#box.n4 hr,#box.n5 hr,#box.n6 hr{margin:calc(2.2*var(--u)) 0}
+#box.n4 #cards{grid-template-columns:repeat(2,1fr);gap:calc(2*var(--u))}
+#box.n5 #cards,#box.n6 #cards{gap:calc(1.8*var(--u))}
+#box.n5 #cards{grid-template-columns:repeat(6,1fr)}
+#box.n5 .card{grid-column:span 2}
+#box.n5 .card:nth-child(4){grid-column:2 / span 2}
+#box.n5 .card:nth-child(5){grid-column:4 / span 2}
+#box.n4 .card,#box.n5 .card,#box.n6 .card{padding:calc(2*var(--u)) calc(1.1*var(--u)) calc(1.8*var(--u));border-radius:calc(2.8*var(--u))}
+#box.n4 .card .ic,#box.n5 .card .ic,#box.n6 .card .ic{width:calc(10*var(--u));height:calc(10*var(--u));margin:0 auto calc(1*var(--u))}
+#box.n4 .card .ic{width:calc(12*var(--u));height:calc(12*var(--u))}
+#box.n4 .card .emo,#box.n5 .card .emo,#box.n6 .card .emo{font-size:calc(8*var(--u));line-height:calc(10*var(--u));height:calc(10*var(--u));margin-bottom:calc(1*var(--u))}
+#box.n4 .card .emo{font-size:calc(9*var(--u));line-height:calc(12*var(--u));height:calc(12*var(--u))}
+#box.n4 .card .lab,#box.n5 .card .lab,#box.n6 .card .lab{font-size:calc(2.1*var(--u));letter-spacing:.12em}
+#box.n4 .card .nm,#box.n5 .card .nm,#box.n6 .card .nm{font-size:calc(4*var(--u));margin-top:calc(.5*var(--u))}
+#box.n4 .card .gn,#box.n5 .card .gn,#box.n6 .card .gn{font-size:calc(2.4*var(--u));margin-top:calc(.55*var(--u))}
+#box.n4 .card .cn,#box.n5 .card .cn,#box.n6 .card .cn{font-size:calc(2.2*var(--u));margin-top:calc(.35*var(--u))}
+#box.n4 .card .cn i,#box.n5 .card .cn i,#box.n6 .card .cn i{width:calc(2.1*var(--u));height:calc(2.1*var(--u))}
+#box.n4 .card .vt,#box.n5 .card .vt,#box.n6 .card .vt{margin-top:calc(1.1*var(--u));font-size:calc(3*var(--u))}
+#box.n4 .card .crown,#box.n5 .card .crown,#box.n6 .card .crown{top:calc(-2.5*var(--u));font-size:calc(2.1*var(--u));padding:calc(.5*var(--u)) calc(1.5*var(--u))}
+#box.n4.ended .card.win,#box.n5.ended .card.win,#box.n6.ended .card.win{transform:scale(1.04)}
+#box.n4 #cta,#box.n5 #cta,#box.n6 #cta{margin-top:calc(2.4*var(--u));font-size:calc(2.5*var(--u))}
+#box.n4 #bar,#box.n5 #bar,#box.n6 #bar{margin-top:calc(1.7*var(--u));height:calc(2*var(--u))}
 </style>
 </head><body>
 <div id="wrap"><div id="box">
@@ -63,17 +91,22 @@ hr{border:0;height:calc(.2*var(--u));background:rgba(255,255,255,.13);margin:cal
 (function(){
 const Q=new URLSearchParams(location.search);
 const P=(k,d)=>Q.has(k)&&Q.get(k)!==''?Q.get(k):d;
-const COLORS=[P('c1','#22d3c5'),P('c2','#ff4d8d'),P('c3','#b6f03c')].map(c=>c[0]=='#'?c:'#'+c);
+const LETTERS='ABCDEF';
+const DEF_COLORS=['#22d3c5','#ff4d8d','#b6f03c','#ff9f1c','#7c5cff','#3b9eff'];
+const DEF_GIFTS=['GG','Rose',"It's corn",'TikTok','Heart Me','Ice Cream Cone'];
+const DEF_NAMES=['A','B','C','D','E','F'];
+const N=Math.min(6,Math.max(2,parseInt(P('opts','3'))||3));
+const COLORS=Array.from({length:N},(_,i)=>{const c=P('c'+(i+1),DEF_COLORS[i]);return c[0]==='#'?c:'#'+c});
 const norm=s=>String(s||'').toLowerCase().replace(/[’‘`´]/g,"'").replace(/[^a-z0-9\u4e00-\u9fff]/g,'');
 const findGift=n=>GIFTS.find(g=>norm(g.name)===norm(n));
 const cfg={
  title:P('title','WHO WIN?'),
  dur:Math.max(5,parseInt(P('t','20'))||20),
  mode:P('mode','count'), // count | coins
- names:[P('n1','A'),P('n2','B'),P('n3','C')],
- gifts:[P('g1','GG'),P('g2','Rose'),P('g3',"It's corn")],
- icons:[P('i1',''),P('i2',''),P('i3','')],
- ids:[P('id1',''),P('id2',''),P('id3','')],
+ names:Array.from({length:N},(_,i)=>P('n'+(i+1),DEF_NAMES[i])),
+ gifts:Array.from({length:N},(_,i)=>P('g'+(i+1),DEF_GIFTS[i])),
+ icons:Array.from({length:N},(_,i)=>P('i'+(i+1),'')),
+ ids:Array.from({length:N},(_,i)=>P('id'+(i+1),'')),
  subRun:P('sub','{n} seconds to choose'),
  cta:P('cta','SEND A GIFT TO CHOOSE'),
  room:P('room',''),
@@ -88,22 +121,23 @@ document.getElementById('wrap').className=P('pos','top');
 if(cfg.preview)document.body.classList.add('preview');
 document.getElementById('title').textContent=cfg.title;
 document.getElementById('cta').textContent=cfg.cta;
-const opts=[0,1,2].map(i=>{const g=findGift(cfg.gifts[i]);return{name:cfg.names[i],gift:g?g.name:cfg.gifts[i],img:cfg.icons[i]||(g&&g.img)||'',coins:parseInt(P('coin'+(i+1),g?g.coins:1))||1,id:cfg.ids[i]||(g&&g.id?String(g.id):''),color:COLORS[i],votes:0}});
+const opts=Array.from({length:N},(_,i)=>{const g=findGift(cfg.gifts[i]);return{name:cfg.names[i],gift:g?g.name:cfg.gifts[i],img:cfg.icons[i]||(g&&g.img)||'',coins:parseInt(P('coin'+(i+1),g?g.coins:1))||1,id:cfg.ids[i]||(g&&g.id?String(g.id):''),color:COLORS[i],votes:0}});
 // ---------- render ----------
 const cardsEl=document.getElementById('cards'),barEl=document.getElementById('bar');
 opts.forEach((o,i)=>{
  const c=document.createElement('div');c.className='card';c.style.setProperty('--cc',o.color);
- c.innerHTML=`<div class="crown">WINNER</div>${o.img?`<img class="ic" src="${o.img}">`:`<div class="emo">🎁</div>`}<div class="lab" style="color:${o.color}">OPTION ${'ABC'[i]}</div><div class="nm"></div><div class="gn"></div><div class="cn"><i></i><span>${o.coins} coin${o.coins>1?'s':''}</span></div><div class="vt">0 VOTES</div>`;
+ c.innerHTML=`<div class="crown">WINNER</div>${o.img?`<img class="ic" src="${o.img}">`:`<div class="emo">🎁</div>`}<div class="lab" style="color:${o.color}">OPTION ${LETTERS[i]}</div><div class="nm"></div><div class="gn"></div><div class="cn"><i></i><span>${o.coins} coin${o.coins>1?'s':''}</span></div><div class="vt">0 VOTES</div>`;
  c.querySelector('.nm').textContent=o.name;c.querySelector('.gn').textContent=o.gift;
  cardsEl.appendChild(c);o.el=c;
  const b=document.createElement('div');b.style.background=o.color;barEl.appendChild(b);o.bar=b;
 });
 const S={phase:'idle',endAt:0,left:cfg.dur};
+function boxClass(){return 'n'+N+' '+S.phase+(S.phase==='running'&&S.left<=5?' urgent':'')}
 function fmtV(n){return (n>=10000?(n/1000).toFixed(1)+'K':n)+(n===1?' VOTE':' VOTES')}
 function draw(){
  const tot=opts.reduce((a,o)=>a+o.votes,0);
  opts.forEach(o=>{const v=o.el.querySelector('.vt'),t=fmtV(o.votes);if(v.textContent!==t){v.textContent=t;v.classList.remove('bump');void v.offsetWidth;v.classList.add('bump')}o.bar.style.flexGrow=tot?Math.max(o.votes,0):1});
- const box=document.getElementById('box');box.className=S.phase+(S.phase==='running'&&S.left<=5?' urgent':'');
+ const box=document.getElementById('box');box.className=boxClass();
  const sub=document.getElementById('subt');
  if(S.phase==='running'){sub.innerHTML=esc(cfg.subRun).replace('{n}','<b>'+S.left+'</b>').replace(/(<\/b>) seconds/,S.left===1?'$1 second':'$1 seconds')}
  else if(S.phase==='idle'){sub.innerHTML=esc(cfg.subRun).replace('{n}','<b>'+cfg.dur+'</b>')}
@@ -121,11 +155,11 @@ function end(){if(S.phase!=='running')return;S.phase='ended';S.left=0;draw();log
  if(cfg.loop||cfg.demo)loopT=setTimeout(()=>start(),(cfg.loop||6)*1000)}
 function tick(){if(S.phase!=='running')return;const l=Math.max(0,Math.ceil((S.endAt-Date.now())/1000));if(l!==S.left){S.left=l;draw()}if(l<=0)end()}
 setInterval(tick,200);
-function addVotes(i,n,who){if(S.phase!=='running'&&!(S.phase==='idle'&&cfg.hold))return;if(!n)return;opts[i].votes=Math.max(0,opts[i].votes+n);draw();
+function addVotes(i,n,who){if(S.phase!=='running'&&!(S.phase==='idle'&&cfg.hold))return;if(!n)return;if(!opts[i])return;opts[i].votes=Math.max(0,opts[i].votes+n);draw();
  if(n>0){const p=document.createElement('div');p.className='pop';p.style.color=opts[i].color;p.textContent='+'+n;opts[i].el.appendChild(p);setTimeout(()=>p.remove(),1000)}}
 // ---------- gift handling (combo-safe) ----------
 const streak=new Map(),seen=new Set();
-function matchOpt(id,name){for(let i=0;i<3;i++){if(opts[i].id&&id&&String(id)===opts[i].id)return i;if(norm(name)&&norm(name)===norm(opts[i].gift))return i}return -1}
+function matchOpt(id,name){for(let i=0;i<opts.length;i++){if(opts[i].id&&id&&String(id)===opts[i].id)return i;if(norm(name)&&norm(name)===norm(opts[i].gift))return i}return -1}
 function onGift(g){
  // g: {id,name,diamonds,repeat,repeatEnd,giftType,groupId,user,msgId}
  if(g.msgId){if(seen.has(g.msgId))return;seen.add(g.msgId);if(seen.size>5000)seen.clear()}
@@ -177,8 +211,8 @@ if(cfg.room){
 }
 // ---------- demo ----------
 if(cfg.demo){
- const bias=[1.0,0.75,0.45];
- setInterval(()=>{if(S.phase!=='running')return;const r=Math.random()*bias.reduce((a,b)=>a+b);let i=0,acc=bias[0];while(r>acc&&i<2)acc+=bias[++i];
+ const bias=opts.map((_,i)=>Math.max(0.25,1-i*0.14));
+ setInterval(()=>{if(S.phase!=='running')return;const r=Math.random()*bias.reduce((a,b)=>a+b);let i=0,acc=bias[0];while(r>acc&&i<opts.length-1)acc+=bias[++i];
   const o=opts[i],grp=String(Math.random()),u='demo'+Math.floor(Math.random()*50),n=Math.random()<.25?2+Math.floor(Math.random()*4):1;
   if(n===1)onGift({id:o.id,name:o.gift,diamonds:o.coins,repeat:1,repeatEnd:true,giftType:2,user:u});
   else for(let k=1;k<=n;k++)setTimeout(()=>onGift({id:o.id,name:o.gift,diamonds:o.coins,repeat:k,repeatEnd:k===n,giftType:1,groupId:grp,user:u}),k*150)},450);
